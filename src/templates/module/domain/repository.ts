@@ -5,5 +5,5 @@ export default interface ScaffoldRepository {
   findById(id: string): Promise<Scaffold>;
   create(payload: ScaffoldPayload): Promise<Scaffold>;
   update(id: string, payload: ScaffoldPayload): Promise<Scaffold>;
-  delete(id: string): Promise<void>;
+  delete(id: string): Promise<boolean | Error>;
 }
