@@ -2,5 +2,5 @@ src/
 *.json
 *.lock
 *.lockb
-./index.ts
+
 node_modules/
