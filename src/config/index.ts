@@ -7,8 +7,9 @@ export const configuration = {
 }
 
 export const SERVICE_BY_INFRA = {
+  [InfrastructureType.axios]: 'axios.repository.ts',
+  [InfrastructureType.fetch]: 'fetch.repository.ts',
   [InfrastructureType.firebase]: 'firebase.repository.ts',
-  [InfrastructureType.postgre]: 'postgre.repository.ts',
   [InfrastructureType.local]: 'local.repository.ts',
 };
 

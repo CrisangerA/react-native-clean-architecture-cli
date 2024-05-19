@@ -1,6 +1,7 @@
 export enum InfrastructureType {
   firebase = 'firebase',
-  postgre = 'postgre',
+  fetch = 'fetch',
+  axios = 'axios',
   local = 'local'
 }
 
