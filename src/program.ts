@@ -27,23 +27,14 @@ export default class Program {
     this.program.command('module <name>')
       .description('Create a new module')
       .option('-i, --infra <source>', 'Specify the infrastructure template (default: firebase)', 'firebase')
-      .action(async (name, options: ModuleOptions) =>  {
+      .action(async (name, options: ModuleOptions) => {
         const moduleName = name.toLowerCase();
-      
         helloProgram('module', moduleName, options);
+
         const scaffoldFiles = this.findScaffoldFiles('module', options);
+        await this.writeScaffoldFiles(scaffoldFiles, moduleName, 'module', 'modules'),
         
-        try {
-          const urlTemplate = path.join(__dirname, 'templates', 'module');
-          const urlDest = path.join(process.cwd(), 'src', 'modules', moduleName);
-          for (const file of scaffoldFiles) {
-            const destinationFile = path.join(urlDest, path.relative(urlTemplate, file));            
-            await this.copyAndModifyFile(file, destinationFile, moduleName);
-          }
-        } catch (error) {
-          console.error('💥 Error processing files:', error);
-        }
-        console.log('\n✅ Module created successfully! 🥳🎉');
+        console.log('\n✅ CRUD created successfully! 🥳🎉');
       });
   }
 
@@ -52,21 +43,23 @@ export default class Program {
       .description('Create a new CRUD module')
       .option('-i, --infra <infrastructure>', 'Specify the infrastructure template (default: firebase)', 'firebase')
       .option('-n, --nav <navigation>', 'Specify the navigation template (default: stack)', 'stack')
-      .action(async (name, options: ModuleOptions) =>  {
+      .action(async (name, options: ModuleOptions) => {
         const moduleName = name.toLowerCase();
         helloProgram('crud', moduleName, options);
 
         const scaffoldFilesUI = this.findScaffoldFiles('crud', options);
-        this.writeScaffoldFiles(scaffoldFilesUI, moduleName, 'screen', 'screens');
-
         const scaffoldFilesModule = this.findScaffoldFiles('module', options);
-        this.writeScaffoldFiles(scaffoldFilesModule, moduleName, 'module', 'modules');
+
+        await Promise.all([
+          this.writeScaffoldFiles(scaffoldFilesUI, moduleName, 'screen', 'screens'),
+          this.writeScaffoldFiles(scaffoldFilesModule, moduleName, 'module', 'modules')
+        ])
         console.log('\n✅ CRUD created successfully! 🥳🎉');
 
       });
   }
 
-  private async writeScaffoldFiles(files: string[], moduleName: string , template: string, dest: string) {
+  private async writeScaffoldFiles(files: string[], moduleName: string, template: string, dest: string) {
     try {
       const urlTemplate = path.join(__dirname, 'templates', template); // -> Url donde estan los templates (archivos de ejemplo)
       const urlDest = path.join(process.cwd(), 'src', dest, moduleName); // -> Url donde se crearan los archivos (carpeta destino)
@@ -79,7 +72,7 @@ export default class Program {
     }
   }
 
-  private findScaffoldFiles(type: ScaffoldType, options: ModuleOptions){
+  private findScaffoldFiles(type: ScaffoldType, options: ModuleOptions) {
     const dic = {
       module: {
         files: MODULE_SCAFFOLD_FILES,
@@ -94,15 +87,17 @@ export default class Program {
     //  Obtener los archivos template
     const urlTemplate = path.join(__dirname, 'templates', folder);
     const scaffoldFiles = files.map(file => path.join(urlTemplate, file));
-  
-    // Obtener el archivo de infraestructura
-    const infraFile = SERVICE_BY_INFRA[options.infra];
-    infraFile && scaffoldFiles.push(path.join(urlTemplate, 'infrastructure', infraFile));
-  
+
+    if (type === 'module') {
+      // Obtener el archivo de infraestructura
+      const infraFile = SERVICE_BY_INFRA[options.infra];
+      infraFile && scaffoldFiles.push(path.join(urlTemplate, 'infrastructure', infraFile));
+    }
+
     return scaffoldFiles;
   }
 
-  private async copyAndModifyFile(source: string, destination: string, moduleName: string){
+  private async copyAndModifyFile(source: string, destination: string, moduleName: string) {
     let capitalReplaced = '';
     try {
       const fileContent = await fs.readFile(source, 'utf8');
@@ -122,7 +117,7 @@ export default class Program {
       const paths = destination.split('/');
       const index = paths.findIndex((value) => value === 'src');
       console.log('   -> 📝 File created:', paths.slice(index).join('/'));
-  
+
     } catch (error) {
       console.log('💥 Write file: ', destination);
       console.log('💥 Error writing file:', error);
