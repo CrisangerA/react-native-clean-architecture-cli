@@ -1,19 +1,9 @@
+import { InfrastructureType } from "src/types";
+
 export const configuration = {
   name: 'rn',
   version: '0.0.1',
   description: '✨ React Native Clean Architecture CLI ✨\n🛠️ CLI para crear el boilerplate de un proyecto en React Native ⚛️ con Clean Architecture. 📂 Incluye carpetas de dominio, aplicacion e infraestructura.'
-}
-
-export enum InfrastructureType {
-  firebase = 'firebase',
-  postgre = 'postgre',
-  local = 'local'
-}
-
-export enum NavigationType {
-  stack = 'stack',
-  bottomTab = 'bottomTab',
-  drawer = 'drawer'
 }
 
 export const SERVICE_BY_INFRA = {
@@ -38,9 +28,3 @@ export const CRUD_SCAFFOLD_FILES = [
   'components/ListView.tsx',
   'components/ItemListView.tsx',
 ];
-
-// ----
-export interface ModuleOptions {
-  infra: InfrastructureType;
-  nav: NavigationType;
-}

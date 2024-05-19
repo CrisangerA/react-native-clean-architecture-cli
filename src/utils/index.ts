@@ -1,5 +1,5 @@
 import fs from 'fs-extra'
-import { ModuleOptions } from '../config';
+import { ModuleOptions } from '../types';
 
 // Program
 export function helloProgram(type: string, name: string, options: ModuleOptions) {

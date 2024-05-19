@@ -1,8 +1,9 @@
 import path from 'path';
 import fs from 'fs-extra'
 import { Command } from 'commander';
+import { ModuleOptions } from './types';
 import { capitalizeFirstLetter, helloProgram } from './utils';
-import { configuration, CRUD_SCAFFOLD_FILES, MODULE_SCAFFOLD_FILES, ModuleOptions, SERVICE_BY_INFRA } from './config';
+import { configuration, CRUD_SCAFFOLD_FILES, MODULE_SCAFFOLD_FILES, SERVICE_BY_INFRA } from './config';
 
 type ScaffoldType = 'module' | 'crud';
 export default class Program {
