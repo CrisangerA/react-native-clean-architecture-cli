@@ -2,7 +2,7 @@ import path from 'path';
 import fs from 'fs-extra'
 import { Command } from 'commander';
 import { ModuleOptions } from './types';
-import { capitalizeFirstLetter, helloProgram } from './utils';
+import { capitalizeFirstLetter, delay, helloProgram } from './utils';
 import { configuration, CRUD_SCAFFOLD_FILES, MODULE_SCAFFOLD_FILES, SERVICE_BY_INFRA } from './config';
 
 type ScaffoldType = 'module' | 'crud';
@@ -49,12 +49,11 @@ export default class Program {
         helloProgram('crud', moduleName, options);
 
         const scaffoldFilesUI = this.findScaffoldFiles('crud', options);
+        await this.writeScaffoldFiles(scaffoldFilesUI, moduleName, 'screen', 'screens');
+        delay(369);
         const scaffoldFilesModule = this.findScaffoldFiles('module', options);
+        await this.writeScaffoldFiles(scaffoldFilesModule, moduleName, 'module', 'modules');
 
-        await Promise.all([
-          this.writeScaffoldFiles(scaffoldFilesUI, moduleName, 'screen', 'screens'),
-          this.writeScaffoldFiles(scaffoldFilesModule, moduleName, 'module', 'modules')
-        ])
         console.log('\n✅ CRUD created successfully! 🥳🎉');
 
       });
