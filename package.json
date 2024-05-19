@@ -1,6 +1,6 @@
 {
   "name": "react_native_clean_arch_cli",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "CLI to develop a React Native app with Clean Architecture",
   "main": "./dist/index.js",
   "bin": {
