@@ -14,6 +14,11 @@ luego ya puedes utilizar:
 rnca module|crud -i|--infra firebase -n|--nav stack
 ```
 
+Si no puedes utilizar **rnca** entonces te recomiendo:
+```bash
+node_modules/react_native_clean_arch_cli/dist/index.js module|crud -i|--infra firebase -n|--nav stack
+```
+
 Mas información en: [React Native Clean Architecture (Docs)](https://crisangera.github.io/react-native-clean-architecture-docs/)
 
 ## Steps for deploy
