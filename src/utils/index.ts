@@ -15,6 +15,8 @@ export function helloProgram(type: string, name: string, options: ModuleOptions)
   console.log('\n🛠️  Options:');
   
   Object.keys(options).map((key) => console.log(` -> ${key}: ${options[key as never]}`));
+  console.log('\n');
+  
 }
 
 // Utility Functions
