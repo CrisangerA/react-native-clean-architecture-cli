@@ -2,22 +2,32 @@
   "name": "react_native_clean_arch_cli",
   "version": "1.0.0",
   "description": "CLI to develop a React Native app with Clean Architecture",
-  "main": "index.js",
+  "main": "./dist/index.js",
   "bin": {
     "rnca": "./dist/index.js"
   },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rm -rf dist && tsc && mkdir ./dist/src/templates && cp -r ./src/templates/* ./dist/src/templates/",
-    "start": "node dist/index.js"
-  },
+  "license": "ISC",
   "keywords": ["react-native", "clean-architecture", "cli", "generator"],
   "author": {
     "name": "Crisanger",
     "email": "crisanger@gmail.com",
     "url": "https://github.com/crisangera"
   },
-  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CrisangerA/react-native-clean-architecture-cli",
+    "directory": "react_native_clean_arch_cli"
+  },
+  "homepage": "https://crisangera.github.io/react-native-clean-architecture-docs/",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rm -rf dist && tsc && mkdir ./dist/src/templates && cp -r ./src/templates/* ./dist/src/templates/",
+    "start": "node dist/index.js",
+    "postinstall": "npm link"
+  },
   "devDependencies": {
     "@types/fs-extra": "^11.0.4",
     "@types/inquirer": "^9.0.7",
