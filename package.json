@@ -1,6 +1,6 @@
 {
   "name": "react_native_clean_arch_cli",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "CLI to develop a React Native app with Clean Architecture",
   "main": "./dist/index.js",
   "bin": {
@@ -25,7 +25,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rm -rf dist && tsc && mkdir ./dist/src/templates && cp -r ./src/templates/* ./dist/src/templates/",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "prepublish": "bun run build"
   },
   "devDependencies": {
     "@types/fs-extra": "^11.0.4",
