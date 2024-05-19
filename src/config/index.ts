@@ -1,4 +1,4 @@
-import { InfrastructureType } from "src/types";
+import { InfrastructureType } from "../types"
 
 export const configuration = {
   name: 'rn',
