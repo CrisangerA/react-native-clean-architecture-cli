@@ -1,6 +1,7 @@
+import ScaffoldRepository from "../domain/repository";
 import FirebaseRepository from "./firebase.repository";
 
-function createScaffoldService() {
+function createScaffoldService(): ScaffoldRepository {
   return new FirebaseRepository();
 }
 

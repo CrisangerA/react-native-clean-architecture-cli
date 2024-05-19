@@ -1,17 +1,17 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 // Modules
-import scaffoldRepository from '../infrastructure/repository';
 import { Scaffold, ScaffoldPayload } from '../domain/model';
+import scaffoldRepository from '../infrastructure/repository';
 import useHandleError from '@modules/shared/app/hooks/useHandleError';
 // Config
 import { COLLECTIONS } from '@config/api.routes';
 
-export function useOrderMutationCreate() {
+export function useMutationScaffoldCreate() {
   const { showAlert } = useHandleError();
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (order: ScaffoldPayload) => {
-      const res = await scaffoldRepository.create(order);
+    mutationFn: async (scaffold: ScaffoldPayload) => {
+      const res = await scaffoldRepository.create(scaffold);
       if (res instanceof Error) {
         showAlert(res);
         return res;
@@ -24,12 +24,12 @@ export function useOrderMutationCreate() {
   });
 }
 
-export function useOrderMutationUpdate() {
+export function useMutationScaffoldUpdate() {
   const { showAlert } = useHandleError();
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (order: Scaffold) => {
-      const res = await scaffoldRepository.update(order.id, order);
+    mutationFn: async (scaffold: Scaffold) => {
+      const res = await scaffoldRepository.update(scaffold.id, scaffold);
       if (res instanceof Error) {
         showAlert(res);
         return res;
@@ -42,7 +42,7 @@ export function useOrderMutationUpdate() {
   });
 }
 
-export function useOrderMutationDelete() {
+export function useMutationScaffoldDelete() {
   const { showAlert } = useHandleError();
   const queryClient = useQueryClient();
   return useMutation({
