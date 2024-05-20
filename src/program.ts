@@ -30,7 +30,7 @@ export default class Program {
       .option('-i, --infra <source>', 'Specify the infrastructure template (default: firebase)', 'firebase')
       .action(async (name, options: ModuleOptions) => {
         const moduleName = name.toLowerCase();
-        helloProgram('module', moduleName, options);
+        await helloProgram('module', moduleName, options);
 
         const scaffoldFiles = this.findScaffoldFiles('module', options);
         await this.writeScaffoldFiles(scaffoldFiles, moduleName, 'module', 'modules'),
@@ -46,11 +46,11 @@ export default class Program {
       .option('-n, --nav <navigation>', 'Specify the navigation template (default: stack)', 'stack')
       .action(async (name, options: ModuleOptions) => {
         const moduleName = name.toLowerCase();
-        helloProgram('crud', moduleName, options);
+        await helloProgram('crud', moduleName, options);
 
         const scaffoldFilesUI = this.findScaffoldFiles('crud', options);
         await this.writeScaffoldFiles(scaffoldFilesUI, moduleName, 'screen', 'screens');
-        delay(369);
+        await delay(369);
         const scaffoldFilesModule = this.findScaffoldFiles('module', options);
         await this.writeScaffoldFiles(scaffoldFilesModule, moduleName, 'module', 'modules');
 
@@ -67,6 +67,8 @@ export default class Program {
         const destinationFile = path.join(urlDest, path.relative(urlTemplate, file));
         await this.copyAndModifyFile(file, destinationFile, moduleName);
       }
+      console.log('\n🚀 All ' + template +' files were created successfully! 🎉\n');
+      await delay(369);
     } catch (error) {
       console.error('💥 Error processing files:', error);
     }
@@ -107,7 +109,7 @@ export default class Program {
       console.log('💥 Error reading file:', error);
     }
     try {
-      if (source.includes('/app/')) {
+      if (source.includes('/app/') || source.includes('/infrastructure/')) {
         const lowerReplaced = capitalReplaced.replace(/scaffold/g, moduleName.toLowerCase());
         const upperReplace = lowerReplaced.replace(/SCAFFOLD/g, moduleName.toUpperCase());
         await fs.outputFile(destination, upperReplace);
@@ -117,7 +119,6 @@ export default class Program {
       const paths = destination.split('/');
       const index = paths.findIndex((value) => value === 'src');
       console.log('   -> 📝 File created:', paths.slice(index).join('/'));
-
     } catch (error) {
       console.log('💥 Write file: ', destination);
       console.log('💥 Error writing file:', error);
