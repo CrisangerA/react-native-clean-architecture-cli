@@ -19,10 +19,6 @@ Si no puedes utilizar **rnca** entonces te recomiendo:
 node_modules/react_native_clean_arch_cli/dist/index.js module|crud -i|--infra firebase -n|--nav stack
 ```
 
-Mas información en: [React Native Clean Architecture (Docs)](https://crisangera.github.io/react-native-clean-architecture-docs/)
+Esta herramienta hace parte de un kit de desarrollo con arquitectura limpia. 
 
-## Steps for deploy
-git switch -c production
-rm -rf dist
-bun run build
-rm -rf node_modules src .gitignore bun.lockb index.ts readme.md tsconfig.json
+Mas información en: [React Native Clean Architecture (Docs)](https://crisangera.github.io/react-native-clean-architecture-docs/)
