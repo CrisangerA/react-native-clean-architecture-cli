@@ -1,11 +1,14 @@
 import path from 'path';
 import fs from 'fs-extra'
 import { Command } from 'commander';
-import { ModuleOptions } from './types';
+
 import { capitalizeFirstLetter, delay, helloProgram } from './utils';
+
+import { InfrastructureType, ModuleOptions, ScaffoldType } from './types';
+
 import { configuration, CRUD_SCAFFOLD_FILES, MODULE_SCAFFOLD_FILES, SERVICE_BY_INFRA } from './config';
 
-type ScaffoldType = 'module' | 'crud';
+// ----------------------------------------------------------------------------------------------------
 export default class Program {
   program: Command;
 
@@ -27,8 +30,9 @@ export default class Program {
   private commandModule() {
     this.program.command('module <name>')
       .description('Create a new module')
-      .option('-i, --infra <source>', 'Specify the infrastructure template (default: firebase)', 'firebase')
+      .option('-i, --infra <source>', 'Specify the infrastructure template (default: firebase). Options: fetch, axios, local', 'firebase')
       .action(async (name, options: ModuleOptions) => {
+        this.validateOptions(options);
         const moduleName = name.toLowerCase();
         await helloProgram('module', moduleName, options);
 
@@ -42,9 +46,10 @@ export default class Program {
   private commandCrud() {
     this.program.command('crud <name>')
       .description('Create a new CRUD module')
-      .option('-i, --infra <infrastructure>', 'Specify the infrastructure template (default: firebase)', 'firebase')
+      .option('-i, --infra <infrastructure>', 'Specify the infrastructure template (default: firebase). Options: fetch, axios, local', 'firebase')
       .option('-n, --nav <navigation>', 'Specify the navigation template (default: stack)', 'stack')
       .action(async (name, options: ModuleOptions) => {
+        this.validateOptions(options);
         const moduleName = name.toLowerCase();
         await helloProgram('crud', moduleName, options);
 
@@ -57,6 +62,14 @@ export default class Program {
         console.log('\n✅ CRUD created successfully! 🥳🎉');
 
       });
+  }
+
+  private validateOptions(options: ModuleOptions) {
+    const infra = Object.values(InfrastructureType).map((file) => file);
+    if (infra.includes(options.infra)) {
+      return;
+    }
+    this.program.error('\n💥 Invalid infrastructure option.\n🚦 Options avaiable for the option -i: fetch, axios, local\n');    
   }
 
   private async writeScaffoldFiles(files: string[], moduleName: string, template: string, dest: string) {

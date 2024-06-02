@@ -7,10 +7,9 @@
     "rnca": "./dist/index.js"
   },
   "license": "ISC",
-  "keywords": ["react-native", "clean-architecture", "cli", "generator"],
+  "keywords": ["react-native", "react-native-cli","clean-architecture", "cli", "typescript", "generator"],
   "author": {
     "name": "Crisanger",
-    "email": "crisanger@gmail.com",
     "url": "https://github.com/crisangera"
   },
   "repository": {

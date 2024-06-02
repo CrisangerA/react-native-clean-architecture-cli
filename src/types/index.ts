@@ -1,3 +1,5 @@
+export type ScaffoldType = 'module' | 'crud';
+
 export enum InfrastructureType {
   firebase = 'firebase',
   fetch = 'fetch',
