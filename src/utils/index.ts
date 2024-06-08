@@ -6,7 +6,7 @@ export async function helloProgram(type: string, name: string, options: ModuleOp
   console.log(`\n   ✨ React Native Clean Architecture CLI ✨\n`);
   await delay(369);
   if (type === 'init') {
-    console.log(`🚧 🏗️  Initializing the resources of your project`);
+    console.log(`🚧 🏗️  Initializing the resources of your project\n`);
   }
   if (type === 'module') {
     console.log(`🚧 🏗️  Creating a new module in: "./src/modules/${name}"`);

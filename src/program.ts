@@ -34,7 +34,7 @@ export default class Program {
       .action(async (_, options) => {
         await helloProgram('init', '', options);
         const scaffoldFiles = this.findScaffoldFiles('init', options);
-        this.writeScaffoldFiles(scaffoldFiles, '', 'required', '');
+        await this.writeScaffoldFiles(scaffoldFiles, '', 'required', '');
         console.log('\n✅ Project initialized successfully! 🥳🎉');
       });
   }

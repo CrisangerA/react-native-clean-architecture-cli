@@ -51,8 +51,8 @@ export const INITIAL_SCAFFOLD_FILES = [
   'modules/shared/domain/regExp.ts',
 
   //'modules/shared/infrastructure/local/local.repository.ts',
-  'modules/shared/infrastructure/axios/axios.service.ts',
-  'modules/shared/infrastructure/fetch/fetch.service.ts',
+  'modules/shared/infrastructure/axios.service.ts',
+  'modules/shared/infrastructure/fetch.service.ts',
 
   // @theme
   'theme/colors.ts',
