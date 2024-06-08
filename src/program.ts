@@ -6,7 +6,7 @@ import { capitalizeFirstLetter, delay, helloProgram } from './utils';
 
 import { InfrastructureType, ModuleOptions, ScaffoldType } from './types';
 
-import { configuration, CRUD_SCAFFOLD_FILES, MODULE_SCAFFOLD_FILES, SERVICE_BY_INFRA } from './config';
+import { configuration, CRUD_SCAFFOLD_FILES, INITIAL_SCAFFOLD_FILES, MODULE_SCAFFOLD_FILES, SERVICE_BY_INFRA } from './config';
 
 // ----------------------------------------------------------------------------------------------------
 export default class Program {
@@ -33,6 +33,8 @@ export default class Program {
       .description('Initialize the necessary resources')
       .action(async (_, options) => {
         await helloProgram('init', '', options);
+        const scaffoldFiles = this.findScaffoldFiles('init', options);
+        this.writeScaffoldFiles(scaffoldFiles, '', 'required', '');
         console.log('\n✅ Project initialized successfully! 🥳🎉');
       });
   }
@@ -49,8 +51,8 @@ export default class Program {
         // Se crean los archivos de la logica de negocio
         const scaffoldFiles = this.findScaffoldFiles('module', options);
         await this.writeScaffoldFiles(scaffoldFiles, moduleName, 'module', 'modules'),
-        
-        await this.postCreateInfrastructure('modules', moduleName, options);
+
+          await this.postCreateInfrastructure('modules', moduleName, options);
         console.log('\n✅ CRUD created successfully! 🥳🎉');
       });
   }
@@ -67,9 +69,9 @@ export default class Program {
 
         // Se crean los archivos de la logica de negocio
         const scaffoldFilesModule = this.findScaffoldFiles('module', options);
-        await this.writeScaffoldFiles(scaffoldFilesModule, moduleName, 'module', 'modules');    
+        await this.writeScaffoldFiles(scaffoldFilesModule, moduleName, 'module', 'modules');
         await delay(369);
-    
+
         // Se crean los archivos de la UI
         const scaffoldFilesUI = this.findScaffoldFiles('crud', options);
         await this.writeScaffoldFiles(scaffoldFilesUI, moduleName, 'screen', 'screens');
@@ -85,11 +87,15 @@ export default class Program {
     if (infra.includes(options.infra)) {
       return;
     }
-    this.program.error('\n💥 Invalid infrastructure option.\n🚦 Options avaiable for the option -i: fetch, axios, local\n');    
+    this.program.error('\n💥 Invalid infrastructure option.\n🚦 Options avaiable for the option -i: fetch, axios, local\n');
   }
 
   private findScaffoldFiles(type: ScaffoldType, options: ModuleOptions) {
     const dic = {
+      init: {
+        files: INITIAL_SCAFFOLD_FILES,
+        folder: 'required'
+      },
       module: {
         files: MODULE_SCAFFOLD_FILES,
         folder: 'module'
@@ -108,8 +114,6 @@ export default class Program {
       // Obtener el archivo de infraestructura
       const infraFile = SERVICE_BY_INFRA[options.infra];
       infraFile && scaffoldFiles.push(path.join(urlTemplate, 'infrastructure', infraFile));
-
-      // Modificar el import del archivo de infraestructura
     }
 
     return scaffoldFiles;
@@ -123,7 +127,7 @@ export default class Program {
         const destinationFile = path.join(urlDest, path.relative(urlTemplate, file));
         await this.copyAndModifyFile(file, destinationFile, moduleName);
       }
-      console.log('\n🚀 All ' + template +' files were created successfully! 🎉\n');
+      console.log('\n🚀 All ' + template + ' files were created successfully! 🎉\n');
       await delay(369);
     } catch (error) {
       console.error('💥 Error processing files:', error);
@@ -132,13 +136,22 @@ export default class Program {
 
   private async copyAndModifyFile(source: string, destination: string, moduleName: string) {
     let capitalReplaced = '';
+
     try {
       const fileContent = await fs.readFile(source, 'utf8');
+      if (moduleName === '') {
+        await fs.outputFile(destination, fileContent);
+        const paths = destination.split('/');
+        const index = paths.findIndex((value) => value === 'src');
+        console.log('   -> 📝 File created:', paths.slice(index).join('/'));
+        return;
+      }
       capitalReplaced = fileContent.replace(/Scaffold/g, capitalizeFirstLetter(moduleName));
     } catch (error) {
       console.log('💥 Read file: ', source);
       console.log('💥 Error reading file:', error);
     }
+
     try {
       if (source.includes('/app/') || source.includes('/infrastructure/')) {
         const lowerReplaced = capitalReplaced.replace(/scaffold/g, moduleName.toLowerCase());

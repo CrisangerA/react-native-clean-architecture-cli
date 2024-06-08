@@ -1,4 +1,4 @@
-export type ScaffoldType = 'module' | 'crud';
+export type ScaffoldType = 'module' | 'crud' | 'init';
 
 export enum InfrastructureType {
   firebase = 'firebase',
