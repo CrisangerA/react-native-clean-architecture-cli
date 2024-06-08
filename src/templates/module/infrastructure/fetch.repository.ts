@@ -1,9 +1,9 @@
 import ScaffoldRepository from "../domain/repository";
 import { Scaffold, ScaffoldPayload } from "../domain/model";
 // Shared
-import { manageAppErrors } from '../../../utils/error';
-import FetchService from "../../../utils/fetch.service";
-import { API_ROUTES } from '../../../utils/api.routes';
+import { manageAppErrors } from '@modules/shared/application/error';
+import FetchService from "@modules/shared/infrastructure/fetch.service";
+import { API_ROUTES } from '@config/api.routes';
 
 // -----------------------------------------------------------------------------------------
 export default class FetchRepository extends FetchService implements ScaffoldRepository {

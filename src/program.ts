@@ -17,6 +17,7 @@ export default class Program {
     this.initialize();
     this.commandModule();
     this.commandCrud();
+    this.commandInit();
     this.program.parse(process.argv);
   }
 
@@ -27,38 +28,53 @@ export default class Program {
       .description(configuration.description);
   }
 
+  private commandInit() {
+    this.program.command('init [name]')
+      .description('Initialize the necessary resources')
+      .action(async (_, options) => {
+        await helloProgram('init', '', options);
+        console.log('\n✅ Project initialized successfully! 🥳🎉');
+      });
+  }
+
   private commandModule() {
     this.program.command('module <name>')
-      .description('Create a new module')
-      .option('-i, --infra <source>', 'Specify the infrastructure template (default: firebase). Options: fetch, axios, local', 'firebase')
+      .description('Create a new module. Options: -i | --infra')
+      .option('-i, --infra <infrastructure>', 'Infrastructure provider. Options: fetch, axios, local', 'firebase')
       .action(async (name, options: ModuleOptions) => {
         this.validateOptions(options);
         const moduleName = name.toLowerCase();
         await helloProgram('module', moduleName, options);
 
+        // Se crean los archivos de la logica de negocio
         const scaffoldFiles = this.findScaffoldFiles('module', options);
         await this.writeScaffoldFiles(scaffoldFiles, moduleName, 'module', 'modules'),
         
+        await this.postCreateInfrastructure('modules', moduleName, options);
         console.log('\n✅ CRUD created successfully! 🥳🎉');
       });
   }
 
   private commandCrud() {
     this.program.command('crud <name>')
-      .description('Create a new CRUD module')
-      .option('-i, --infra <infrastructure>', 'Specify the infrastructure template (default: firebase). Options: fetch, axios, local', 'firebase')
-      .option('-n, --nav <navigation>', 'Specify the navigation template (default: stack)', 'stack')
+      .description('Create a new CRUD module. Options: -i | --infra, -n | --nav')
+      .option('-i, --infra <infrastructure>', 'Infrastructure provider. Options: fetch, axios, local', 'firebase')
+      .option('-n, --nav <navigation>', 'Navigation template. Options: stack, tabs', 'stack')
       .action(async (name, options: ModuleOptions) => {
         this.validateOptions(options);
         const moduleName = name.toLowerCase();
         await helloProgram('crud', moduleName, options);
 
+        // Se crean los archivos de la logica de negocio
+        const scaffoldFilesModule = this.findScaffoldFiles('module', options);
+        await this.writeScaffoldFiles(scaffoldFilesModule, moduleName, 'module', 'modules');    
+        await delay(369);
+    
+        // Se crean los archivos de la UI
         const scaffoldFilesUI = this.findScaffoldFiles('crud', options);
         await this.writeScaffoldFiles(scaffoldFilesUI, moduleName, 'screen', 'screens');
-        await delay(369);
-        const scaffoldFilesModule = this.findScaffoldFiles('module', options);
-        await this.writeScaffoldFiles(scaffoldFilesModule, moduleName, 'module', 'modules');
 
+        await this.postCreateInfrastructure('modules', moduleName, options);
         console.log('\n✅ CRUD created successfully! 🥳🎉');
 
       });
@@ -70,21 +86,6 @@ export default class Program {
       return;
     }
     this.program.error('\n💥 Invalid infrastructure option.\n🚦 Options avaiable for the option -i: fetch, axios, local\n');    
-  }
-
-  private async writeScaffoldFiles(files: string[], moduleName: string, template: string, dest: string) {
-    try {
-      const urlTemplate = path.join(__dirname, 'templates', template); // -> Url donde estan los templates (archivos de ejemplo)
-      const urlDest = path.join(process.cwd(), 'src', dest, moduleName); // -> Url donde se crearan los archivos (carpeta destino)
-      for (const file of files) {
-        const destinationFile = path.join(urlDest, path.relative(urlTemplate, file));
-        await this.copyAndModifyFile(file, destinationFile, moduleName);
-      }
-      console.log('\n🚀 All ' + template +' files were created successfully! 🎉\n');
-      await delay(369);
-    } catch (error) {
-      console.error('💥 Error processing files:', error);
-    }
   }
 
   private findScaffoldFiles(type: ScaffoldType, options: ModuleOptions) {
@@ -107,9 +108,26 @@ export default class Program {
       // Obtener el archivo de infraestructura
       const infraFile = SERVICE_BY_INFRA[options.infra];
       infraFile && scaffoldFiles.push(path.join(urlTemplate, 'infrastructure', infraFile));
+
+      // Modificar el import del archivo de infraestructura
     }
 
     return scaffoldFiles;
+  }
+
+  private async writeScaffoldFiles(files: string[], moduleName: string, template: string, dest: string) {
+    try {
+      const urlTemplate = path.join(__dirname, 'templates', template); // -> Url donde estan los templates (archivos de ejemplo)
+      const urlDest = path.join(process.cwd(), 'src', dest, moduleName); // -> Url donde se crearan los archivos (carpeta destino)
+      for (const file of files) {
+        const destinationFile = path.join(urlDest, path.relative(urlTemplate, file));
+        await this.copyAndModifyFile(file, destinationFile, moduleName);
+      }
+      console.log('\n🚀 All ' + template +' files were created successfully! 🎉\n');
+      await delay(369);
+    } catch (error) {
+      console.error('💥 Error processing files:', error);
+    }
   }
 
   private async copyAndModifyFile(source: string, destination: string, moduleName: string) {
@@ -135,6 +153,21 @@ export default class Program {
     } catch (error) {
       console.log('💥 Write file: ', destination);
       console.log('💥 Error writing file:', error);
+    }
+  }
+
+  private async postCreateInfrastructure(dest: string, moduleName: string, options: ModuleOptions) {
+    const urlDest = path.join(process.cwd(), 'src', dest, moduleName, 'infrastructure', 'repository.ts'); // -> Url donde se crearan los archivos (carpeta destino)
+    const fileContent = await fs.readFile(urlDest, 'utf8');
+    if (options.infra === InfrastructureType.fetch) {
+      const capitalReplaced = fileContent.replace(/Firebase/g, capitalizeFirstLetter(InfrastructureType.fetch));
+      const lowerReplaced = capitalReplaced.replace(/firebase/g, InfrastructureType.fetch);
+      await fs.outputFile(urlDest, lowerReplaced);
+    }
+    if (options.infra === InfrastructureType.axios) {
+      const capitalReplaced = fileContent.replace(/Firebase/g, capitalizeFirstLetter(InfrastructureType.axios));
+      const lowerReplaced = capitalReplaced.replace(/firebase/g, InfrastructureType.axios);
+      await fs.outputFile(urlDest, lowerReplaced);
     }
   }
 }

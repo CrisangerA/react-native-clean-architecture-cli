@@ -29,3 +29,35 @@ export const CRUD_SCAFFOLD_FILES = [
   'components/ListView.tsx',
   'components/ItemListView.tsx',
 ];
+
+export const INITIAL_SCAFFOLD_FILES = [
+  // @config
+  'config/constants.ts',
+  'config/api.routes.ts',
+  'config/local.storage.ts',
+  // @shared
+  'modules/shared/application/analytics.ts',
+  'modules/shared/application/error.ts',
+  'modules/shared/application/alert.ts',
+  'modules/shared/application/zustand.ts',
+  'modules/shared/application/hooks/index.ts',
+  'modules/shared/application/hooks/useSearchbar.ts',
+
+  'modules/shared/domain/model/error.ts',
+  'modules/shared/domain/model/index.ts',
+  'modules/shared/domain/utils/index.ts',
+  'modules/shared/domain/utils/array.ts',
+  'modules/shared/domain/adapter.ts',
+  'modules/shared/domain/regExpts',
+
+  'modules/shared/infrastructure/local/local.repository.ts',
+  'modules/shared/infrastructure/axios/axios.repository.ts',
+  'modules/shared/infrastructure/fetch/fetch.repository.ts',
+
+  // @theme
+  'theme/colors.ts',
+  'theme/common.ts',
+  'theme/fonts.ts',
+  'theme/index.ts',
+  'theme/responsive.ts',
+];
