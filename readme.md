@@ -11,13 +11,19 @@ npm link
 
 luego ya puedes utilizar:
 ```bash
-rnca module|crud -i|--infra firebase -n|--nav stack
+rnca init
 ```
 
 Si no puedes utilizar **rnca** entonces te recomiendo:
 ```bash
-node_modules/react_native_clean_arch_cli/dist/index.js module|crud -i|--infra firebase -n|--nav stack
+node_modules/react_native_clean_arch_cli/dist/index.js init
 ```
+
+| Comando | Opciones                   | Description                           |
+| ------- | -------------------------- | ------------------------------------- |
+| init    |                            | Comando para inicializar recursos     |
+| module  | -i \| --infra              | Comando para crear un nuevo modulo    |
+| crud    | -i \| --infra, -n \| --nav | Comando para crear un nuevo crud      |
 
 Esta herramienta hace parte de un kit de desarrollo con arquitectura limpia. 
 
